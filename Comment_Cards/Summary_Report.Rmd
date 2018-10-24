@@ -1,0 +1,45 @@
+---
+title: "Summarizing Negative Comment Categories"
+author: "Shreya Goel"
+project: "Comment Cards - Expedition Feedbacks"
+output: html_document
+---
+
+```{r Install Packages}
+#installing the right packages 
+install.packages("dplyr")
+install.packages("tidyr")
+```
+
+```{r MAIN}
+# read data
+data <- read.csv("Data.csv", header = TRUE, sep = ",")
+# remove variables that are not important/related to the current analysis
+data1 <- data[-c(1:4,11:15,20:22,24:99,101,103:117)]
+# select the attributes that your analysis will focus on
+library(dplyr)
+data2 <- dplyr::filter(data1, sg_year == "2018", sg_comment_yes_or_no == "1", sg_number_of_negatives >= "1")
+# select the data you want to summarise in table
+data3 <- data2[c(25:44)]
+# get the long format data of the column values
+data4 <- tidyr::gather(data3, key = "Feedback", value = "n")
+# remove the ros with values na to avoid wrong tables
+library(tidyr)
+data5 <- drop_na(data4)
+# group by the feedback type and number of feedbacks to each category that were recorded
+library(tidyr)
+data6 <- data5 %>% group_by(Feedback) %>% summarise(sum(n)) #Solution DATASET
+```
+
+```{r SOLUTION TABLE}
+# getwd()
+# setwd("F:/ShreyaG/R Studio/Comment_Cards")
+write.table(data6, "F:/ShreyaG/R Studio/Comment_Cards/Solution.csv", sep=",")
+```
+
+```{r counting number of comments treated in the data}
+data7 <- data3
+data7$complains <- rowSums(data7, na.rm = TRUE)
+data7$complains <- as.integer(data7$complains)
+data8 <- dplyr::filter(data7, data7$complains > 0)
+```
