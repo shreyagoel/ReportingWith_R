@@ -19,17 +19,12 @@ data1 <- data[-c(1:4,11:15,20:22,24:99,101,103:117)]
 data2 <- dplyr::filter(data1, sg_year == "2018", sg_comment_yes_or_no == "1", sg_number_of_negatives >= "1")
 data3 <- data2[c(25:44)]
 data4 <- tidyr::gather(data3, key = "Feedback", value = "n")
-library(tidyr)
 data5 <- drop_na(data4)
-library(tidyr)
 data6 <- data5 %>% group_by(Feedback) %>% summarise(sum(n)) #Solution DATASET
 colnames(data6) <- c("feedback", "number_of_records")
 ```
 
 ```{r Shiny Tool - POINT PLOT}
-library(shiny)
-library(ggplot2)
-library(plotly)
 ui <- fluidPage(plotlyOutput("distPlot"))
 server <- function(input, output) {
    output$distPlot <- renderPlotly({
