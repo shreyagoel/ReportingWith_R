@@ -23,7 +23,7 @@ colnames(data6) <- c("feedback", "number_of_records")
 ```
 
 ```{r Solution Table}
-write.table(data6, "F:/ShreyaG/R Studio/Comment_Cards/Solution.csv", sep=",")
+write.table(data6, ".../Solution.csv", sep=",")
 ```
 
 ```{r Counting # of comments sampled in the reporting}
