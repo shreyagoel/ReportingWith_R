@@ -1,0 +1,52 @@
+---
+title: "Data Cleaning"
+author: "Shreya Goel"
+project: "Google Analytics - Session Duration"
+output: html_document
+---
+
+```{r Install Packages}
+
+install.packages("dplyr")
+install.packages("tidyr")
+```
+
+```{r Data MAIN}
+
+oct17 <- read.csv("oct2017.csv", header = TRUE, sep = ",")
+
+#repeat the following segment for all the months follow
+data <- oct17
+data$month <- "oct"
+data$year <- 2017
+oct17 <- data
+rm(data)
+
+nov17 <- read.csv("nov2017.csv", header = TRUE, sep = ",")
+dec17 <- read.csv("dec2017.csv", header = TRUE, sep = ",")
+jan18 <- read.csv("jan2018.csv", header = TRUE, sep = ",")
+feb18 <- read.csv("feb2018.csv", header = TRUE, sep = ",")
+mar18 <- read.csv("mar2018.csv", header = TRUE, sep = ",")
+apr18 <- read.csv("apr2018.csv", header = TRUE, sep = ",")
+may18 <- read.csv("may2018.csv", header = TRUE, sep = ",")
+jun18 <- read.csv("jun2018.csv", header = TRUE, sep = ",")
+jul18 <- read.csv("jul2018.csv", header = TRUE, sep = ",")
+aug18 <- read.csv("aug2018.csv", header = TRUE, sep = ",")
+sep18 <- read.csv("sep2018.csv", header = TRUE, sep = ",")
+```
+
+```{r Merging Data}
+colnames(oct17) <- colnames(nov17) <- colnames(dec17) <- colnames(jan18) <- colnames(feb18) <- colnames(mar18) <- colnames(apr18) <- colnames(may18) <- colnames(jun18) <- colnames(jul18) <- colnames(aug18) <- colnames(sep18) <- c("session_duration","data_range","segment","unique_users","sessions","new_users","bounce_rate","email_signups","brochure_requests","brochure_views","brochure_downloads","month","year")
+
+data <- full_join(oct17, nov17, by = NULL, copy = FALSE)
+data <- full_join(data, dec17, by = NULL, copy = FALSE)
+data <- full_join(data, jan18, by = NULL, copy = FALSE)
+data <- full_join(data, feb18, by = NULL, copy = FALSE)
+data <- full_join(data, mar18, by = NULL, copy = FALSE)
+data <- full_join(data, apr18, by = NULL, copy = FALSE)
+data <- full_join(data, may18, by = NULL, copy = FALSE)
+data <- full_join(data, jun18, by = NULL, copy = FALSE)
+data <- full_join(data, jul18, by = NULL, copy = FALSE)
+data <- full_join(data, aug18, by = NULL, copy = FALSE)
+data <- full_join(data, sep18, by = NULL, copy = FALSE)
+```
