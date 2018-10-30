@@ -6,7 +6,6 @@ output: html_document
 ---
 
 ```{r Install Packages}
-
 install.packages("dplyr")
 install.packages("tidyr")
 ```
@@ -15,7 +14,7 @@ install.packages("tidyr")
 
 oct17 <- read.csv("oct2017.csv", header = TRUE, sep = ",")
 
-#repeat the following segment for all the months follow
+#repeat the following segment for all the months that follow
 data <- oct17
 data$month <- "oct"
 data$year <- 2017
@@ -49,4 +48,18 @@ data <- full_join(data, jun18, by = NULL, copy = FALSE)
 data <- full_join(data, jul18, by = NULL, copy = FALSE)
 data <- full_join(data, aug18, by = NULL, copy = FALSE)
 data <- full_join(data, sep18, by = NULL, copy = FALSE)
+```
+
+```{r Data Subset}
+data_all <- dplyr::filter(data, session_duration == "All")
+data <- dplyr::filter(data, session_duration != "All")
+```
+
+```{r Data Cleaning}
+data$session_duration <- gsub(" seconds", "", data$session_duration) 
+data$segment <- gsub(" URL", "", data$segment)
+data$segment <- gsub("SG ", "", data$segment)
+
+data$segment <- as.factor(data$segment)
+data$session_duration <- as.integer(data$session_duration)
 ```
