@@ -55,11 +55,51 @@ data_all <- dplyr::filter(data, session_duration == "All")
 data <- dplyr::filter(data, session_duration != "All")
 ```
 
-```{r Data Cleaning}
+```{r Data Cleaning - Part I}
 data$session_duration <- gsub(" seconds", "", data$session_duration) 
 data$segment <- gsub(" URL", "", data$segment)
 data$segment <- gsub("SG ", "", data$segment)
+data$unique_users <- gsub(",", "", data$unique_users)
 
 data$segment <- as.factor(data$segment)
 data$session_duration <- as.integer(data$session_duration)
+data$unique_users <- as.integer(data$unique_users)
+```
+
+```{r Data Cleaning - Part II}
+data$`<2mins` <- ifelse(data$session_duration<=180,1,0)
+data$`2-5mins` <- ifelse(data$session_duration>180 & data$session_duration<=300,1,0)
+data$`5-10mins` <- ifelse(data$session_duration>300 & data$session_duration<=600,1,0)
+data$`10-30mins` <- ifelse(data$session_duration>600 & data$session_duration<=1800,1,0)
+data$`>30mins` <- ifelse(data$session_duration>1800,1,0)
+
+data$duration_segment <- ifelse(data$`<2mins`==1,"<2mins", 
+                                ifelse(data$`2-5mins`==1,"2-5mins", 
+                                       ifelse(data$`5-10mins`==1,"5-10mins",
+                                              ifelse(data$`10-30mins`==1,"10-30mins",
+                                                     ifelse(data$`>30mins`==1,">30mins",
+                                                            "Unknown")))))
+data$duration_segment <- as.factor(data$duration_segment)
+data <- dplyr::filter(data, !is.na(data$duration_segment))
+data$year <- as.factor(data$year)
+```
+
+```{r Towards the Summary by product - PART I}
+data1 <- data[c(3,12,13,19,4)]
+data1$month_year = paste(data1$month, data1$year, sep="_")
+data_prod1 <- dplyr::filter(data1, segment == "Product1")
+data_prod1 <- data_alas[c(6,4,5)]
+# Do this for all other products
+```
+
+```{r Towards the Summary by product - PART II}
+aggregate(unique_users ~ month_year + duration_segment, data = data_prod1, FUN = 'sum')
+sol_prod1 <- ddply(data_prod1, .(month_year,duration_segment), summarize, UniqueUsers = sum(unique_users))
+sol_prod1 <- tidyr::spread(data=sol_prod1, duration_segment, UniqueUsers)
+sol_prod1$Product <- "Product 1"
+# Do this for all other products
+
+data2 <- full_join(sol_prod1, sol_prod2, by = NULL) # Do this for all other products
+data2 <- data2[c(7,1:6)]
+sol <- aggregate(data2[, 3:7], list(data2$Product), mean)
 ```
