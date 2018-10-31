@@ -1,5 +1,5 @@
 ---
-title: "Data Cleaning"
+title: "Summary Report"
 author: "Shreya Goel"
 project: "Google Analytics - Session Duration"
 output: html_document
