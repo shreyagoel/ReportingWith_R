@@ -103,3 +103,22 @@ data2 <- full_join(sol_prod1, sol_prod2, by = NULL) # Do this for all other prod
 data2 <- data2[c(7,1:6)]
 sol <- aggregate(data2[, 3:7], list(data2$Product), mean)
 ```
+
+```{r Remove the unwanted data}
+rm(data, data1, data_all, data_prod1, oct17, b=nov17, dec17, jan18, feb18, mar18, apr18, may18, jun18, jul18, aug18, sep18, sol_prod1, sol_prod2, data2)
+```
+
+```{r}
+#Cleaning the final solution table
+sol$`<2mins` <-round(sol$`<2mins`)
+sol$`>30mins` <-round(sol$`>30mins`)
+sol$`5-10mins` <-round(sol$`5-10mins`)
+sol$`2-5mins` <-round(sol$`2-5mins`)
+sol$`10-30mins` <-round(sol$`10-30mins`)
+sol$Product <- sol$Group.1
+sol <- sol[c(7,2:6)]
+```
+
+```{r SAVING SOLUTION TABLE}
+write.table(sol, ".../Solution_R.csv", sep=",")
+```
