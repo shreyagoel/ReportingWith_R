@@ -1,0 +1,29 @@
+---
+title: "Summary Report"
+author: "Shreya Goel"
+project: "Email - Effective Pivots"
+output: html_document
+---
+
+```{r}
+setwd(".../Email_IBM")
+```
+
+```{r Install Packages}
+install.packages("dplyr") #Data Manipulation
+install.packages("tidyr") #Data Manipulation
+```
+
+```{r Read the data}
+data <- read.csv("Data.csv", header = TRUE, sep = ",")
+data <- data[c(3:39)]
+```
+
+```{r Subset the data}
+data1 <- dplyr::filter(data, year == "2018", mailing_name_short != "ReturningGuest", mailing_name_short != "ExploreMore", mailing_template != "AC", mailing_template != "NW", mailing_template != "WB", mailing_template != "TH", mailing_template != "PV")
+```
+
+```{r Understand the variables}
+summary(data1$mailing_template)
+summary(data1$mailing_name_short)
+```
